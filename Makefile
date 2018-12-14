@@ -6,10 +6,13 @@ serverpath=./taask-server
 build/server: tag/server/dev server/build/docker
 
 install/server: build/server
-	helm template $(serverpath)/ops/chart --set Tag=$(servertag) --set HomeDir=$(HOME) | kubectl apply -f - -n taask
+	helm template $(serverpath)/ops/chart \
+	--set Tag=$(servertag) --set HomeDir=$(HOME) \
+	| linkerd inject --proxy-bind-timeout 30s - \
+	| kubectl apply -f - -n taask
 
 logs/server:
-	kubectl logs deployment/taask-server -n taask -f
+	kubectl logs deployment/taask-server taask-server -n taask -f
 
 uninstall/server:
 	kubectl delete service taask-server -n taask
@@ -28,10 +31,20 @@ count=1
 build/runner: tag/runner/dev runner/build/docker
 
 install/runner: build/runner
-	helm template $(runnerpath)/ops/chart --set Tag=$(runnertag) --set JoinCode=$(shell cat ~/.taask/server/config/joincode) --set Count=$(count) | kubectl apply -f - -n taask
+	helm template $(runnerpath)/ops/chart \
+	--set Tag=$(runnertag) --set JoinCode=$(shell cat ~/.taask/server/config/joincode) --set Count=$(count) \
+	| linkerd inject --proxy-bind-timeout 30s - \
+	| kubectl apply -f - -n taask
+
+## this is essentially the same as install, without a build beforehand
+scale/runner:
+	helm template $(runnerpath)/ops/chart \
+	--set Tag=$(runnertag) --set JoinCode=$(shell cat ~/.taask/server/config/joincode) --set Count=$(count) \
+	| linkerd inject --proxy-bind-timeout 30s - \
+	| kubectl apply -f - -n taask
 
 logs/runner:
-	kubectl logs deployment/runner-k8s -n taask -f
+	kubectl logs deployment/runner-k8s runner-k8s -n taask -f
 
 uninstall/runner:
 	kubectl delete deployment runner-k8s -n taask

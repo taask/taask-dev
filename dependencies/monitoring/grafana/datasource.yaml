@@ -10,7 +10,7 @@ deleteDatasources:
 # whats available in the database
 datasources:
   # <string, required> name of the datasource. Required
-- name: Prometheus
+- name: prometheus
   # <string, required> datasource type. Required
   type: prometheus
   # <string, required> access mode. direct or proxy. Required
@@ -18,7 +18,8 @@ datasources:
   # <int> org id. will default to orgId 1 if not specified
   orgId: 1
   # <string> url
-  url: http://prometheus.metrics.svc.cluster.local:9090
+  # for taask dev environment: this relies on prom and graf being in the same namespace (or using linkerd)
+  url: http://prometheus:9090
   # <string> database password, if used
   password:
   # <string> database user, if used
