@@ -1,0 +1,68 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: prometheus
+  labels: &DeploymentLabels
+    metrics/component: prometheus
+spec:
+  selector:
+    matchLabels: *DeploymentLabels
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: *DeploymentLabels
+    spec:
+      containers:
+      - name: prometheus
+        image: taask/prometheus:dev
+        imagePullPolicy: Never
+        args: ["--config.file=/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus/data"]
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+        - mountPath: /prometheus/data
+          name: prom-data
+      volumes:
+      - name: prom-data
+        hostPath:
+          # directory location on host
+          path: {{ .Values.HomeDir }}/.taask/prometheus/data
+          # this field is optional
+          type: Directory
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-ingress
+  labels: &ServiceLabels
+    metrics/service: prometheus
+spec:
+  ports:
+  - name: http
+    port: 9090
+    protocol: TCP
+    nodePort: 30090
+  selector:
+    metrics/component: prometheus
+  type: NodePort
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  labels: &ServiceLabels
+    metrics/service: prometheus
+spec:
+  ports:
+  - name: http
+    port: 9090
+    protocol: TCP
+  selector:
+    metrics/component: prometheus
+  type: ClusterIP

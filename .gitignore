@@ -1,5 +1,5 @@
 taask-server/
 runner-golang/
 client-golang/
-runner-kubernetes/
+runner-k8s/
 .DS_Store

@@ -1,0 +1,51 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: grafana
+  labels: &DeploymentLabels
+    metrics/component: grafana
+spec:
+  selector:
+    matchLabels: *DeploymentLabels
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: *DeploymentLabels
+    spec:
+      containers:
+      - name: grafana
+        image: taask/grafana:dev
+        imagePullPolicy: Never
+        # args: []
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - mountPath: /var/lib/grafana
+          name: graf-data
+      volumes:
+      - name: graf-data
+        hostPath:
+          # directory location on host
+          path: {{ .Values.HomeDir }}/.taask/grafana/data
+          # this field is optional
+          type: Directory
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  labels: &ServiceLabels
+    metrics/service: grafana
+spec:
+  ports:
+  - name: http
+    port: 3000
+    protocol: TCP
+    nodePort: 30030
+  selector:
+    metrics/component: grafana
+  type: NodePort
