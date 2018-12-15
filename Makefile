@@ -14,6 +14,9 @@ install/server: build/server
 logs/server:
 	kubectl logs deployment/taask-server taask-server -n taask -f
 
+logs/server/search:
+	kubectl logs deployment/taask-server taask-server -n taask -f | grep $(search)
+
 uninstall/server:
 	kubectl delete service taask-server -n taask
 	kubectl delete service taask-server-ingress -n taask
@@ -23,7 +26,7 @@ tag/server/dev:
 	mkdir -p ./taask-server/.build
 	date +%s | openssl sha256 | base64 | head -c 12 > ./taask-server/.build/tag
 
-runnertag=$(shell cat ./taask-server/.build/tag)
+runnertag=$(shell cat ./runner-k8s/.build/tag)
 runnerpath=./runner-k8s
 joincode=asdf
 count=1
@@ -45,6 +48,9 @@ scale/runner:
 
 logs/runner:
 	kubectl logs deployment/runner-k8s runner-k8s -n taask -f
+
+logs/runner/search:
+	kubectl logs deployment/runner-k8s runner-k8s -n taask -f | grep $(search)
 
 uninstall/runner:
 	kubectl delete deployment runner-k8s -n taask
