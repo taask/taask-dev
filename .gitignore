@@ -2,5 +2,6 @@ taask-server/
 runner-golang/
 client-golang/
 runner-k8s/
+taask.github.io/
 .DS_Store
 .build
