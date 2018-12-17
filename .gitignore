@@ -6,3 +6,6 @@ taaskctl/
 taask.github.io/
 .DS_Store
 .build
+serverout
+alltasks
+completetasks
