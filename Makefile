@@ -58,3 +58,23 @@ uninstall/runner:
 tag/runner/dev:
 	mkdir -p ./runner-k8s/.build
 	date +%s | openssl sha256 | base64 | head -c 12 > ./runner-k8s/.build/tag
+
+
+### some helpful debugging tools
+
+debug/tasks/incomplete:
+	cat serverout | grep -e "> waiting" \
+	| sed 's/ status updated ( -> waiting)//g' \
+	| sort \
+	> alltasks
+
+	cat serverout | grep -e "> complete" \
+	| sed 's/ status updated (running -> complete)//g' \
+	| sort \
+	> completetasks
+
+	diff completetasks alltasks
+
+debug/tasks/logs:
+	cat serverout | grep $(uuid) | code -
+	
