@@ -2,6 +2,7 @@ taask-server/
 runner-golang/
 client-golang/
 runner-k8s/
+runner-docker/
 taaskctl/
 taask.github.io/
 .DS_Store
@@ -9,3 +10,4 @@ taask.github.io/
 serverout
 alltasks
 completetasks
+sandbox/
