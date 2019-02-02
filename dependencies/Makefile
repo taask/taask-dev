@@ -25,6 +25,8 @@ deps/local/directories:
 	mkdir -p ~/.taask/prometheus/data
 	mkdir -p ~/.taask/grafana/data
 	mkdir -p ~/.taask/server/config
+	mkdir -p ~/.taask/runner/config
+	mkdir -p ~/.taask/runner/data
 
 
 ###################################################
