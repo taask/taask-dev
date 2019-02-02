@@ -4,6 +4,3 @@ deps/install/linkerd:
 	linkerd check --pre
 	linkerd install | kubectl apply -f -
 	linkerd check
-
-deps/uninstall/linkerd/extras:
-	kubectl delete deployment linkerd-grafana -n linkerd

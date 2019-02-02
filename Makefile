@@ -1,6 +1,8 @@
 include dependencies/Makefile taask-server/Makefile runner-k8s/Makefile runner-docker/Makefile
 
-## imports install, build, tag, etc tools from server and runners
+##################################################################
+# imports install, build, tag, etc tools from server and runners #
+##################################################################
 
 ## Ex: install/server 				: installs the server
 ##	   install/runner/docker 		: installs the docker runner
@@ -13,7 +15,10 @@ runnerk8spath=./runner-k8s
 runnerdockerpath=./runner-docker
 
 
-## some helpful debugging tools
+################################
+# some helpful debugging tools #
+################################
+
 debug/tasks/incomplete:
 	cat serverout | grep -e "> waiting" \
 	| sed 's/ status updated ( -> waiting)//g' \
